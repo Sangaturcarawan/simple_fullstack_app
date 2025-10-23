@@ -1,21 +1,29 @@
-const mockUsers = [
-  { email: "test@example.com", password: "123456" },
-  { email: "user@example.com", password: "password" },
-];
+async function getUsers() {
+  try {
+    const response = await fetch("users.json");
+    if (!response.ok) throw new Error("Failed to fetch users");
+    const users = await response.json();
+    return users;
+  } catch (err) {
+    console.error(err);
+    return [];
+  }
+}
 
 document.addEventListener("DOMContentLoaded", () => {
   const logInForm = document.getElementById("logInForm");
   const logOutBtn = document.getElementById("logOutBtn");
 
   if (logInForm) {
-    logInForm.addEventListener("submit", (e) => {
+    logInForm.addEventListener("submit", async (e) => {
       e.preventDefault();
 
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
       const message = document.getElementById("message");
 
-      const user = mockUsers.find(
+      const users = await getUsers();
+      const user = users.find(
         (u) => u.email === email && u.password === password
       );
 
